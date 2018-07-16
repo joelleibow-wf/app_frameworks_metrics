@@ -1,0 +1,1 @@
+export { VideoResource } from "./video";
