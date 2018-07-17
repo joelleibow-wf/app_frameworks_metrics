@@ -9,7 +9,7 @@ export interface HistoryResource extends PaginatedResource {
   items: MessageResource[];
 }
 
-interface SearchParams {
+export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
