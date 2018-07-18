@@ -46,7 +46,9 @@ export default class PaginatedResourceServiceHelper<
       throw Error(
         `Received response '${
           serviceResponse.statusText
-        }' from resource API w/ URL: ${serviceResponse.url}`
+        }' from resource API w/ URL, ${
+          serviceResponse.url
+        } and headers, ${serviceResponse.headers.toString()}`
       );
     }
   }
@@ -70,7 +72,9 @@ export default class PaginatedResourceServiceHelper<
       throw Error(
         `Received response '${
           serviceResponse.statusText
-        }' from resource API w/ URL: ${serviceResponse.url}`
+        }' from resource API w/ URL, ${
+          serviceResponse.url
+        } and headers, ${serviceResponse.headers.toString()}`
       );
     }
   }
