@@ -1,4 +1,8 @@
+# Directories
 .vscode
 build
 node_modules
 output
+
+# Files
+.env
