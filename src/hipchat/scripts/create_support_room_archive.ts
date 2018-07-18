@@ -1,96 +1,109 @@
 import { createWriteStream, WriteStream } from "fs";
-import { Transform as Json2csvTransform } from "json2csv";
+import { Parser } from "json2csv";
 
-import { RoomHistory, RoomHistoryResource } from "../resources/room";
+import PaginatedResourceServiceHelper from "./utils/paginated_resource_service_helper";
 
-// const teamMembers = [
-//   "AaronLademann",
-//   "ClaireSarsam",
-//   "CorwinSheahan",
-//   "DustinPauze",
-//   "EvanWeible",
-//   "GregLittlefield",
-//   "JayUdey",
-//   "JoelLeibow",
-//   "KealJones",
-//   "MaxPeterson",
-//   "SebastianMalysa",
-//   "ToddBeckman"
-// ];
+import { MessageResource } from "../resources/message";
+import { RoomHistoryResource } from "../resources/room";
+import { RoomHistoryService } from "../services/room";
 
 const supportRooms = [
-  // {
-  //   apiId: 2751222,
-  //   name: "Support: App Intelligence"
-  // },
-  // {
-  //   apiId: 2752715,
-  //   name: "Support: H5 / Dart"
-  // },
-  // {
-  //   apiId: 823785,
-  //   name: "Support: UI Platform (UIP)"
-  // },
+  {
+    apiId: 2751222,
+    name: "Support: App Intelligence"
+  },
+  {
+    apiId: 2752715,
+    name: "Support: H5 / Dart"
+  },
+  {
+    apiId: 823785,
+    name: "Support: UI Platform (UIP)"
+  },
   {
     apiId: 4240765,
     name: "Support: Unified Wdesk"
+  },
+  {
+    apiId: 2750828,
+    name: "Support: Wdesk SDK"
   }
-  // {
-  //   apiId: 2750828,
-  //   name: "Support: Wdesk SDK"
-  // }
 ];
 
-const date = "2018-07-15T23:59:59.000";
+const date = "2018-07-16T23:59:59.000";
 const endDate = "2017-12-13T00:00:00.000";
 
 supportRooms.forEach(room => {
-  const hipchatSupportRoomCSVArchive = createWriteStream(
+  const supportRoomCSVArchive = createWriteStream(
     `output/${room.name.toLowerCase().replace(/(\:\s)|\s/g, "_")}.csv`
   );
 
-  hipchatSupportRoomCSVArchive.on("open", async () => {
-    await createHipchatSupportRoomArchive(
-      room.apiId,
-      hipchatSupportRoomCSVArchive
-    );
+  supportRoomCSVArchive.on("open", async () => {
+    await createSupportRoomArchive(room.apiId, supportRoomCSVArchive);
   });
 });
 
-async function createHipchatSupportRoomArchive(
+async function createSupportRoomArchive(
   supportRoomApiId: number,
   supportRoomCSVArchive: WriteStream
 ) {
+  const paginatedResourceServiceHelper = new PaginatedResourceServiceHelper<
+    RoomHistoryService,
+    RoomHistoryResource
+  >(new RoomHistoryService(supportRoomApiId), {
+    date,
+    "end-date": endDate
+  });
+
+  await paginatedResourceServiceHelper.fetchAll();
+
+  // tslint:disable-next-line:no-console
+  console.log(
+    `Completed fetching of ${
+      paginatedResourceServiceHelper.fetchedPages
+    } page(s)!`
+  );
+
   const supportArchiveFields = [
-    { label: "id", value: "items.id" },
+    { label: "id", value: "id" },
     {
       label: "support_room_api_id",
       stringify: false,
       value: () => supportRoomApiId.toString()
     },
-    { label: "date", value: "items.date" },
-    { label: "type", value: "items.type" },
-    { label: "from_user_id", value: "items.from.id" },
-    { label: "from_user_mention_name", value: "items.from.mention_name" },
-    { label: "from_user_name", value: "items.from.name" },
-    { label: "message", value: "items.message" },
+    { label: "date", value: "date" },
+    { label: "type", value: "type" },
+    { label: "from_user_id", value: "from.id" },
+    { label: "from_user_mention_name", value: "from.mention_name" },
+    { label: "from_user_name", value: "from.name" },
+    { label: "message", value: "message" },
     {
       label: "raw_json",
-      value: (row: RoomHistoryResource) => {
-        return JSON.stringify(row.items);
+      value: (row: MessageResource) => {
+        return JSON.stringify(row);
       }
     }
   ];
-  const json2csvTransform = new Json2csvTransform({
-    fields: supportArchiveFields,
-    unwind: ["items"]
-  });
 
-  const roomHistory = new RoomHistory(supportRoomApiId);
-  const fetchHistoryResponse = await roomHistory.fetchHistory(null, {
-    date,
-    "end-date": endDate
-  });
+  try {
+    const parser = new Parser({
+      fields: supportArchiveFields
+    });
 
-  fetchHistoryResponse.body.pipe(json2csvTransform).pipe(supportRoomCSVArchive);
+    // tslint:disable-next-line:no-console
+    console.log(`Writing the support room archive...`);
+
+    const supportRoomMessages = paginatedResourceServiceHelper.resourceItems;
+    supportRoomCSVArchive.write(parser.parse(supportRoomMessages), () => {
+      // tslint:disable-next-line:no-console
+      console.log(
+        `Archive complete. Wrote ${
+          supportRoomMessages.length
+        } messages to archive`
+      );
+    });
+  } catch (err) {
+    // tslint:disable-next-line:no-console
+    console.error(err);
+  }
 }
