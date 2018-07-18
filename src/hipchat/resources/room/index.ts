@@ -1,4 +1,1 @@
-export {
-  History as RoomHistory,
-  HistoryResource as RoomHistoryResource
-} from "./history";
+export { HistoryResource as RoomHistoryResource } from "./history";
