@@ -5,5 +5,6 @@ export interface ResourceLinks {
 }
 
 export interface PaginatedResource {
+  items: any[];
   links: ResourceLinks;
 }
