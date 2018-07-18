@@ -14,15 +14,6 @@ async function createSupportRoomArchive(
   supportRoomApiId: number,
   supportRoomCSVArchive: WriteStream
 ) {
-  /*
-  *
-  * Modify these to adjust what dates of messages within the support room
-  *   will be included within the archive!!!
-  *
-  */
-  const date = "2018-07-16T23:59:59.000";
-  const endDate = "2017-12-13T00:00:00.000";
-
   const paginatedResourceServiceHelper = new PaginatedResourceServiceHelper<
     RoomHistoryService,
     RoomHistoryResource
@@ -118,9 +109,26 @@ const supportRooms = [
   }
 ];
 
+/*
+*
+* Modify these to adjust what dates of messages within the support room
+*   will be included within the archive!!!
+*
+*/
+const now = Date.now();
+const nowDate = new Date(now);
+
+const date = nowDate.toISOString();
+const endDate = "2018-07-17T00:00:00.000";
+
 asyncForEach<SupportRoomConfig, Promise<void>>(supportRooms, async room => {
+  const month = padTimeUnit(nowDate.getUTCMonth(), 8, 1);
+  const dayOfMonth = padTimeUnit(nowDate.getUTCDate());
+  const hours = padTimeUnit(nowDate.getHours());
+  const minutes = padTimeUnit(nowDate.getUTCMinutes());
+
   const supportRoomCSVArchive = createWriteStream(
-    `output/${room.name
+    `output/${nowDate.getUTCFullYear()}${month}${dayOfMonth}${hours}${minutes}_${room.name
       .toLowerCase()
       .replace(/\s/g, "_")
       .replace(/(\W\s?)/g, "")}.csv`
@@ -128,6 +136,16 @@ asyncForEach<SupportRoomConfig, Promise<void>>(supportRooms, async room => {
 
   await createSupportRoomArchive(room.apiId, supportRoomCSVArchive);
 });
+
+function padTimeUnit(
+  timeUnit: number,
+  greaterThanOrEqualTo = 9,
+  incrementBy = 0
+) {
+  return timeUnit <= greaterThanOrEqualTo
+    ? `0${timeUnit + incrementBy}`
+    : timeUnit;
+}
 
 // Use this to avoid that Node can't support async/await at the top level
 //   within a script.
