@@ -36,10 +36,18 @@ export default class PaginatedResourceServiceHelper<
 
     this.fetchedPages++;
 
-    this.resourceJson = await serviceResponse.json();
+    if (serviceResponse.ok) {
+      this.resourceJson = await serviceResponse.json();
 
-    if (this.resourceJson.links && this.resourceJson.links.next) {
-      await this.fetchResourceNextPage(this.resourceJson.links.next);
+      if (this.resourceJson.links && this.resourceJson.links.next) {
+        await this.fetchResourceNextPage(this.resourceJson.links.next);
+      }
+    } else {
+      throw Error(
+        `Received response '${
+          serviceResponse.statusText
+        }' from resource API w/ URL: ${serviceResponse.url}`
+      );
     }
   }
 
@@ -48,14 +56,22 @@ export default class PaginatedResourceServiceHelper<
 
     this.fetchedPages++;
 
-    const resourceJson: R = await serviceResponse.json();
+    if (serviceResponse.ok) {
+      const resourceJson: R = await serviceResponse.json();
 
-    this.resourceJson.items = this.resourceJson.items.concat(
-      resourceJson.items
-    );
+      this.resourceJson.items = this.resourceJson.items.concat(
+        resourceJson.items
+      );
 
-    if (resourceJson.links && resourceJson.links.next) {
-      await this.fetchResourceNextPage(resourceJson.links.next);
+      if (resourceJson.links && resourceJson.links.next) {
+        await this.fetchResourceNextPage(resourceJson.links.next);
+      }
+    } else {
+      throw Error(
+        `Received response '${
+          serviceResponse.statusText
+        }' from resource API w/ URL: ${serviceResponse.url}`
+      );
     }
   }
 }
