@@ -1,3 +1,4 @@
+import { config } from "dotenv";
 import { createWriteStream, WriteStream } from "fs";
 import { Parser } from "json2csv";
 
@@ -6,6 +7,8 @@ import PaginatedResourceServiceHelper from "./utils/paginated_resource_service_h
 import { MessageResource } from "../resources/message";
 import { RoomHistoryResource } from "../resources/room";
 import { RoomHistoryService } from "../services/room";
+
+config();
 
 async function createSupportRoomArchive(
   supportRoomApiId: number,

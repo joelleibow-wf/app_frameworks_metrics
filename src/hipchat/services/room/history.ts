@@ -23,8 +23,7 @@ export class History implements Base {
     searchParams = Object.assign(
       {},
       {
-        // TODO: Move this to an environment variable
-        auth_token: "hnwS7ZLKXtimdRh5D47bVsdqGDPQQcTl5mPp28kg"
+        auth_token: process.env.HIPCHAT_API_KEY
       },
       searchParams
     );
