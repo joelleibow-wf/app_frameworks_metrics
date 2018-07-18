@@ -7,46 +7,19 @@ import { MessageResource } from "../resources/message";
 import { RoomHistoryResource } from "../resources/room";
 import { RoomHistoryService } from "../services/room";
 
-const supportRooms = [
-  {
-    apiId: 2751222,
-    name: "Support: App Intelligence"
-  },
-  {
-    apiId: 2752715,
-    name: "Support: H5 / Dart"
-  },
-  {
-    apiId: 823785,
-    name: "Support: UI Platform (UIP)"
-  },
-  {
-    apiId: 4240765,
-    name: "Support: Unified Wdesk"
-  },
-  {
-    apiId: 2750828,
-    name: "Support: Wdesk SDK"
-  }
-];
-
-const date = "2018-07-16T23:59:59.000";
-const endDate = "2017-12-13T00:00:00.000";
-
-supportRooms.forEach(room => {
-  const supportRoomCSVArchive = createWriteStream(
-    `output/${room.name.toLowerCase().replace(/(\:\s)|\s/g, "_")}.csv`
-  );
-
-  supportRoomCSVArchive.on("open", async () => {
-    await createSupportRoomArchive(room.apiId, supportRoomCSVArchive);
-  });
-});
-
 async function createSupportRoomArchive(
   supportRoomApiId: number,
   supportRoomCSVArchive: WriteStream
 ) {
+  /*
+  *
+  * Modify these to adjust what dates of messages within the support room
+  *   will be included within the archive!!!
+  *
+  */
+  const date = "2018-07-16T23:59:59.000";
+  const endDate = "2017-12-13T00:00:00.000";
+
   const paginatedResourceServiceHelper = new PaginatedResourceServiceHelper<
     RoomHistoryService,
     RoomHistoryResource
@@ -91,7 +64,7 @@ async function createSupportRoomArchive(
     });
 
     // tslint:disable-next-line:no-console
-    console.log(`Writing the support room archive...`);
+    console.log(`Writing the archive...`);
 
     const supportRoomMessages = paginatedResourceServiceHelper.resourceItems;
     supportRoomCSVArchive.write(parser.parse(supportRoomMessages), () => {
@@ -105,5 +78,61 @@ async function createSupportRoomArchive(
   } catch (err) {
     // tslint:disable-next-line:no-console
     console.error(err);
+  }
+}
+
+interface SupportRoomConfig {
+  apiId: number;
+  name: string;
+}
+
+/*
+*
+* To avoid hitting Hipchat REST API rate limits, it is recommended to run
+*   this script once per room!!!
+*
+*/
+const supportRooms = [
+  {
+    apiId: 2751222,
+    name: "Support: App Intelligence"
+  },
+  {
+    apiId: 2752715,
+    name: "Support: H5 / Dart"
+  },
+  {
+    apiId: 823785,
+    name: "Support: UI Platform (UIP)"
+  },
+  {
+    apiId: 4240765,
+    name: "Support: Unified Wdesk"
+  },
+  {
+    apiId: 2750828,
+    name: "Support: Wdesk SDK"
+  }
+];
+
+asyncForEach<SupportRoomConfig, Promise<void>>(supportRooms, async room => {
+  const supportRoomCSVArchive = createWriteStream(
+    `output/${room.name
+      .toLowerCase()
+      .replace(/\s/g, "_")
+      .replace(/(\W\s?)/g, "")}.csv`
+  );
+
+  await createSupportRoomArchive(room.apiId, supportRoomCSVArchive);
+});
+
+// Use this to avoid that Node can't support async/await at the top level
+//   within a script.
+async function asyncForEach<I, R>(
+  array: I[],
+  callback: (item: I, index: number, array: I[]) => R
+) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
   }
 }
