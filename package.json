@@ -2,7 +2,7 @@
   "name": "afsupportmonitor",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "create_support_room_archive": "ts-node -P ./tsconfig.json ./src/hipchat/scripts/create_support_room_archive.ts"
   },
   "license": "ISC",
   "dependencies": {
