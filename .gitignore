@@ -1,6 +1,9 @@
 # Directories
+.serverless
 .vscode
+.webpack
 build
+jspm_packages
 node_modules
 output
 
