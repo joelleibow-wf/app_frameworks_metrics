@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "esModuleInterop": true,
-    "module": "commonjs",
+    "lib": ["esnext"],
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "build",
     "paths": {
-      "*": ["node_modules/*", "./@types"]
+      "*": ["node_modules/*", "@types"]
     },
     "rootDir": "src",
     "sourceMap": true,
     "target": "es2017"
-  }
+  },
+  "exclude": ["node_modules"]
 }
