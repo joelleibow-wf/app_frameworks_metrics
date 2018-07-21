@@ -1,6 +1,6 @@
 import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
 
-export const hello: Handler = (
+export const supportMessageReceived: Handler = (
   event: APIGatewayEvent,
   context: Context,
   cb: Callback
