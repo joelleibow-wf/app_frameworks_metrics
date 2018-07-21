@@ -11,7 +11,7 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: functions/hipchat.supportMessageReceived
     events:
       - http:
           method: get
