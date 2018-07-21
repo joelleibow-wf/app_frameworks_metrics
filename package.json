@@ -6,7 +6,6 @@
   "scripts": {
     "create_support_room_archive": "ts-node -P ./tsconfig.json ./src/hipchat/scripts/create_support_room_archive.ts"
   },
-  "main": "handler.js",
   "dependencies": {
     "@google-cloud/bigquery": "^1.3.0",
     "dotenv": "^6.0.0",
