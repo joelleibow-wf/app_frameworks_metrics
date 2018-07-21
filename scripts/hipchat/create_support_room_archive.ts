@@ -2,11 +2,11 @@ import { config } from "dotenv";
 import { createWriteStream, WriteStream } from "fs";
 import { Parser } from "json2csv";
 
-import PaginatedResourceServiceHelper from "./utils/paginated_resource_service_helper";
+import PaginatedResourceServiceHelper from "../utils/paginated_resource_service_helper";
 
-import { MessageResource } from "../resources/message";
-import { RoomHistoryResource } from "../resources/room";
-import { RoomHistoryService } from "../services/room";
+import { MessageResource } from "../../libs/hipchat/resources/message";
+import { RoomHistoryResource } from "../../libs/hipchat/resources/room";
+import { RoomHistoryService } from "../../libs/hipchat/services/room";
 
 config();
 

@@ -1,4 +1,4 @@
-import { MessageLinkResource } from "../message";
+import { MessageLinkResource } from ".";
 import { UserResource } from "../user";
 
 export interface MessageResource {

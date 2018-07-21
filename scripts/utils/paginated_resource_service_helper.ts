@@ -1,7 +1,7 @@
 import { Response } from "node-fetch";
 
-import { PaginatedResource } from "../../resources";
-import { Base, SearchParams } from "../../services/base";
+import { PaginatedResource } from "../../libs/hipchat/resources";
+import { Base, SearchParams } from "../../libs/hipchat/services/base";
 
 export default class PaginatedResourceServiceHelper<
   S extends Base,
