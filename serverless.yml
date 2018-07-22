@@ -10,9 +10,15 @@ provider:
   runtime: nodejs8.10
 
 functions:
-  hello:
+  supportMessageReceived:
     handler: functions/hipchat.supportMessageReceived
     events:
       - http:
-          method: get
-          path: hello
+          method: post
+          path: support-message
+  createRoomWebhook:
+    handler: functions/hipchat.createRoomWebhook
+    events:
+      - http:
+          method: post
+          path: room/webhook
