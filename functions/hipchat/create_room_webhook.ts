@@ -1,4 +1,4 @@
-import { Handler } from "aws-lambda";
+import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
 import { randomBytes } from "crypto";
 import { config } from "dotenv";
 
@@ -6,7 +6,11 @@ import { RoomWebHookService } from "../../libs/hipchat/services/room";
 
 config();
 
-export const createRoomWebhook: Handler = async (event, context, callback) => {
+export const createRoomWebhook: Handler = async (
+  event: APIGatewayEvent,
+  context: Context,
+  done: Callback
+) => {
   const roomWebhookService = new RoomWebHookService(
     event.pathParameters.roomId,
     randomBytes(32).toString()
@@ -25,5 +29,5 @@ export const createRoomWebhook: Handler = async (event, context, callback) => {
     statusCode: roomWebhook.status
   };
 
-  callback(null, response);
+  done(null, response);
 };
