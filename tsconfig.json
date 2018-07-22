@@ -7,7 +7,6 @@
     "paths": {
       "*": ["node_modules/*", "@types"]
     },
-    "rootDir": "src",
     "sourceMap": true,
     "target": "es2017"
   },
