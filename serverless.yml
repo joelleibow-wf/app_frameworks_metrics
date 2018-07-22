@@ -4,6 +4,7 @@ service:
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  - serverless-offline
 
 provider:
   name: aws
@@ -15,10 +16,14 @@ functions:
     events:
       - http:
           method: post
-          path: support-message
+          path: support-messages
   createRoomWebhook:
     handler: functions/hipchat.createRoomWebhook
     events:
       - http:
           method: post
-          path: room/webhook
+          path: rooms/{roomId}/webhooks
+          request:
+            parameters:
+              paths:
+                roomId: true
