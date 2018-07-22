@@ -12,7 +12,7 @@ export abstract class HipchatService {
 
   private origin: string;
 
-  constructor(public resourceId: number) {
+  constructor(public resourceId: string | number) {
     this.origin = resourceServices.hipchat.origin;
   }
 

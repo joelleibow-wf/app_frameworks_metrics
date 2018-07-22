@@ -5,7 +5,7 @@ import { HipchatService } from "../service";
 import { CreateRoomWebHook } from "../../resources/room";
 
 export class WebHook extends HipchatService {
-  constructor(roomId: number, key: string) {
+  constructor(roomId: string | number, key: string) {
     super(roomId);
 
     this.pathName = `v2/room/${roomId}/extension/webhook/${key}`;

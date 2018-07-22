@@ -4,7 +4,7 @@ import { URL, URLSearchParams } from "url";
 import { HipchatService, SearchParams } from "../service";
 
 export class History extends HipchatService {
-  constructor(roomId: number) {
+  constructor(roomId: string | number) {
     super(roomId);
 
     this.pathName = `/v2/room/${roomId}/history`;
