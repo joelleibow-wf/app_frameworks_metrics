@@ -1,18 +1,2 @@
-import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
-
-export const supportMessageReceived: Handler = (
-  event: APIGatewayEvent,
-  context: Context,
-  cb: Callback
-) => {
-  const response = {
-    body: JSON.stringify({
-      input: event,
-      message:
-        "Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!"
-    }),
-    statusCode: 200
-  };
-
-  cb(null, response);
-};
+export { supportMessageReceived } from "./hipchat/support_message_received";
+export { createRoomWebhook } from "./hipchat/create_room_webhook";
