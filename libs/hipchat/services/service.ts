@@ -13,7 +13,7 @@ export abstract class HipchatService {
     this.origin = resourceServices.hipchat.origin;
   }
 
-  public abstract async fetch(
+  public async fetch?(
     url?: string,
     searchParams?: SearchParams
   ): Promise<Response>;

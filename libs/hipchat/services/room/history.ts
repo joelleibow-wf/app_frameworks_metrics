@@ -1,24 +1,22 @@
 import fetch, { Response } from "node-fetch";
 import { URL, URLSearchParams } from "url";
 
-import { Base, SearchParams } from "../base";
+import { HipchatService, SearchParams } from "../service";
 
-export class History implements Base {
-  private resourceUrl: string;
-  private roomId: number;
+export class History extends HipchatService {
+  private pathName: string;
 
   constructor(roomId: number) {
-    this.resourceUrl = `https://workiva.hipchat.com/v2/room/${roomId}/history`;
-    this.roomId = roomId;
+    super(roomId);
+
+    this.pathName = `/v2/room/${roomId}/history`;
   }
 
-  public async fetch(
-    historyUrl?: string,
-    searchParams?: SearchParams
-  ): Promise<Response> {
+  public async fetch(historyUrl?: string, searchParams?: SearchParams) {
     return await fetch(this.createResourceUrl(historyUrl, searchParams).href);
   }
 
+  // TODO: Can this be abstracted/refactored?
   private createResourceUrl(historyUrl?: string, searchParams?: SearchParams) {
     searchParams = Object.assign(
       {},
@@ -29,7 +27,9 @@ export class History implements Base {
     );
     const urlSearchParams = new URLSearchParams(searchParams).toString();
 
-    const resourceUrl = new URL(historyUrl || this.resourceUrl);
+    const resourceUrl = new URL(
+      historyUrl || `${this.origin}/${this.pathName}`
+    );
     resourceUrl.search = resourceUrl.search
       ? `${resourceUrl.search}&${urlSearchParams}`
       : urlSearchParams;
