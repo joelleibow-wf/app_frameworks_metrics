@@ -27,7 +27,7 @@ functions:
     handler: functions/hipchat.addonUninstalled
     events:
       - http:
-          method: post
+          method: get
           path: addon/uninstalled
   supportMessageReceived:
     handler: functions/hipchat.supportMessageReceived
