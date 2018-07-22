@@ -5,12 +5,10 @@ export const supportMessageReceived: Handler = (
   context: Context,
   cb: Callback
 ) => {
+  // tslint:disable-next-line:no-console
+  console.log(event);
+
   const response = {
-    body: JSON.stringify({
-      input: event,
-      message:
-        "Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!"
-    }),
     statusCode: 200
   };
 
