@@ -1,4 +1,4 @@
-export interface Create {
+export interface CreateWebHookResource {
   name?: string;
   url: string;
   pattern?: string;

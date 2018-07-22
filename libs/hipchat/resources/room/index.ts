@@ -1,2 +1,2 @@
 export { HistoryResource as RoomHistoryResource } from "./history";
-export { Create as CreateRoomWebHook } from "./webhook";
+export { CreateWebHookResource as CreateRoomWebHookResource } from "./webhook";
