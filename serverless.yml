@@ -11,22 +11,12 @@ provider:
   runtime: nodejs8.10
 
 functions:
-  createRoomWebhook:
-    handler: functions/hipchat.createRoomWebhook
+  addonCapabilities:
+    handler: functions/hipchat.addonCapabilities
     events:
       - http:
-          method: post
-          path: rooms/{roomId}/webhooks
-          request:
-            parameters:
-              paths:
-                roomId: true
-  getCapabilitiesDescriptor:
-    handler: functions/hipchat.getCapabilitiesDescriptor
-    events:
-      - http:
-          method: post
-          path: addon/descriptor
+          method: get
+          path: addon/capabilities
   supportMessageReceived:
     handler: functions/hipchat.supportMessageReceived
     events:
