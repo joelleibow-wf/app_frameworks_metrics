@@ -23,8 +23,7 @@ export class Installable {
 
     const deleteParams: DynamoDB.Types.DeleteItemInput = {
       Key: {
-        oauthId: { S: installable.oauthId },
-        roomId: { N: installable.roomId.toString() }
+        oauthId: { S: installable.oauthId }
       },
       TableName: process.env.DYNAMODB_TABLE
     };
