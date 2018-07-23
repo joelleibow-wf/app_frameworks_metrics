@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import Axios from "axios";
 
 import { DynamoDB } from "aws-sdk";
 
@@ -12,12 +12,12 @@ export class Installable {
   }
 
   public async fetch() {
-    return await fetch(this.url);
+    return await Axios.get<InstallableResource>(this.url);
   }
 
   public async delete() {
     const fetchResponse = await this.fetch();
-    const installable: InstallableResource = await fetchResponse.json();
+    const installable: InstallableResource = await fetchResponse.data;
 
     const dyanmoDB = new DynamoDB();
 

@@ -1,5 +1,3 @@
-import { Response } from "node-fetch";
-
 import { PaginatedResource } from "../../libs/hipchat/resources";
 import {
   HipchatService,
@@ -7,7 +5,7 @@ import {
 } from "../../libs/hipchat/services/service";
 
 export default class PaginatedResourceServiceHelper<
-  S extends HipchatService,
+  S extends HipchatService<R>,
   R extends PaginatedResource
 > {
   public fetchedPages = 0;
@@ -32,17 +30,17 @@ export default class PaginatedResourceServiceHelper<
     // tslint:disable-next-line:no-console
     console.log(`Fetching all pages for provided resource...`);
 
-    const serviceResponse: Response = await this.service.fetch(
-      null,
-      this.searchParams
-    );
+    const serviceResponse = await this.service.fetch(null, this.searchParams);
 
     this.fetchedPages++;
 
-    if (serviceResponse.ok) {
-      this.resourceJson = await serviceResponse.json();
+    if (serviceResponse.status === 200) {
+      this.resourceJson = await serviceResponse.data;
 
       if (this.resourceJson.links && this.resourceJson.links.next) {
+        // tslint:disable-next-line:no-console
+        console.log(this.resourceJson.links.next);
+
         await this.fetchResourceNextPage(this.resourceJson.links.next);
       }
     } else {
@@ -50,7 +48,7 @@ export default class PaginatedResourceServiceHelper<
         `Received response '${
           serviceResponse.statusText
         }' from resource API w/ URL, ${
-          serviceResponse.url
+          serviceResponse.config.url
         } and headers, ${serviceResponse.headers.toString()}`
       );
     }
@@ -59,10 +57,13 @@ export default class PaginatedResourceServiceHelper<
   private async fetchResourceNextPage(nextPageUrl: string) {
     const serviceResponse = await this.service.fetch(nextPageUrl);
 
+    // tslint:disable-next-line:no-console
+    console.log(serviceResponse.config.url);
+
     this.fetchedPages++;
 
-    if (serviceResponse.ok) {
-      const resourceJson: R = await serviceResponse.json();
+    if (serviceResponse.status === 200) {
+      const resourceJson: R = await serviceResponse.data;
 
       this.resourceJson.items = this.resourceJson.items.concat(
         resourceJson.items
@@ -76,7 +77,7 @@ export default class PaginatedResourceServiceHelper<
         `Received response '${
           serviceResponse.statusText
         }' from resource API w/ URL, ${
-          serviceResponse.url
+          serviceResponse.config.url
         } and headers, ${serviceResponse.headers.toString()}`
       );
     }

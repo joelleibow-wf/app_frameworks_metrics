@@ -1,9 +1,9 @@
-import fetch, { Response } from "node-fetch";
-import { URL, URLSearchParams } from "url";
+import Axios from "axios";
 
+import { RoomHistoryResource } from "../../resources/room";
 import { HipchatService, SearchParams } from "../service";
 
-export class History extends HipchatService {
+export class History extends HipchatService<RoomHistoryResource> {
   constructor(roomId: string | number) {
     super(roomId);
 
@@ -11,6 +11,8 @@ export class History extends HipchatService {
   }
 
   public async fetch(historyUrl?: string, searchParams?: SearchParams) {
-    return await fetch(this.createResourceUrl(historyUrl, searchParams));
+    return await Axios.get<RoomHistoryResource>(
+      this.createResourceUrl(historyUrl, searchParams)
+    );
   }
 }

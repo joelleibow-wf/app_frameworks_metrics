@@ -1,4 +1,5 @@
-import { Response } from "node-fetch";
+import { AxiosResponse } from "axios";
+
 import { URL, URLSearchParams } from "url";
 
 import { resourceServices } from "../../../config/resource_services";
@@ -7,7 +8,7 @@ export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
-export abstract class HipchatService {
+export abstract class HipchatService<R> {
   protected pathName: string;
 
   private origin: string;
@@ -19,7 +20,7 @@ export abstract class HipchatService {
   public async fetch?(
     url?: string,
     searchParams?: SearchParams
-  ): Promise<Response>;
+  ): Promise<AxiosResponse<R>>;
 
   protected createResourceUrl(
     resourceUrl?: string,
@@ -36,7 +37,7 @@ export abstract class HipchatService {
 
     const url = new URL(resourceUrl || `${this.origin}/${this.pathName}`);
     url.search = url.search
-      ? `${resourceUrl.search}&${urlSearchParams}`
+      ? `${url.search}&${urlSearchParams}`
       : urlSearchParams;
 
     return url.href;
