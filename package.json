@@ -9,6 +9,7 @@
   "dependencies": {
     "@google-cloud/bigquery": "^1.3.0",
     "aws-sdk": "^2.279.1",
+    "axios": "^0.18.0",
     "dotenv": "^6.0.0",
     "json2csv": "^4.1.6",
     "node-fetch": "^2.2.0",
