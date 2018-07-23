@@ -38,9 +38,6 @@ export default class PaginatedResourceServiceHelper<
       this.resourceJson = await serviceResponse.data;
 
       if (this.resourceJson.links && this.resourceJson.links.next) {
-        // tslint:disable-next-line:no-console
-        console.log(this.resourceJson.links.next);
-
         await this.fetchResourceNextPage(this.resourceJson.links.next);
       }
     } else {
@@ -56,9 +53,6 @@ export default class PaginatedResourceServiceHelper<
 
   private async fetchResourceNextPage(nextPageUrl: string) {
     const serviceResponse = await this.service.fetch(nextPageUrl);
-
-    // tslint:disable-next-line:no-console
-    console.log(serviceResponse.config.url);
 
     this.fetchedPages++;
 
