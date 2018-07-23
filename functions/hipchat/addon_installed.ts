@@ -1,6 +1,5 @@
 import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
 import { AWSError, DynamoDB } from "aws-sdk";
-import { v1 } from "uuid";
 
 export const addonInstalled: Handler = (
   event: APIGatewayEvent,
@@ -13,7 +12,6 @@ export const addonInstalled: Handler = (
     Item: {
       capabilitiesUrl: { S: data.capabilitiesUrl },
       groupId: { N: data.groupId.toString() },
-      id: { S: v1() },
       installedOn: { S: new Date(Date.now()).toISOString() },
       oauthId: { S: data.oauthId },
       oauthSecret: { S: data.oauthSecret },
