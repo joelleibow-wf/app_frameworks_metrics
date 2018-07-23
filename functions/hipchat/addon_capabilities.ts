@@ -51,6 +51,9 @@ export const addonCapabilities: Handler = (
 
   const response = {
     body: JSON.stringify(descriptor),
+    headers: {
+      "content-type": "application/json"
+    },
     statusCode: 200
   };
 
