@@ -8,7 +8,7 @@ export const addonUninstalled: Handler = async (event: APIGatewayEvent) => {
   );
   await installableService.delete();
 
-  const response = {
+  return {
     headers: {
       location: event.queryStringParameters.redirect_url
     },
