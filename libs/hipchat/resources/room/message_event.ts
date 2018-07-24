@@ -1,7 +1,7 @@
 import { MessageResource } from "../message";
 import { RoomResource } from "./room";
 
-export interface ReceivedMessageResource {
+export interface MessageEventResource {
   event: string;
   item: {
     message: MessageResource;
