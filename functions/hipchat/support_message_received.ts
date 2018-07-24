@@ -37,7 +37,7 @@ export const supportMessageReceived: Handler = async (
         date: eventItem.message.date,
         id: eventItem.message.id,
         message: eventItem.message.message,
-        raw_json: JSON.stringify(eventItem),
+        raw_json: JSON.stringify(eventItem.message),
         support_room_api_id: eventItem.room.id,
         type: eventItem.message.type
       },
