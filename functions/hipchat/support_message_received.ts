@@ -21,25 +21,25 @@ export const supportMessageReceived: Handler = async (
       installItem.Item.oauthSecret.S
     );
 
-    const message = roomMessageEvent.item.message;
+    const eventItem = roomMessageEvent.item;
     const messageFrom =
-      message.from && typeof message.from !== "string"
+      eventItem.message.from && typeof eventItem.message.from !== "string"
         ? {
-            from_user_id: message.from.id,
-            from_user_mention_name: message.from.mention_name,
-            from_user_name: message.from.name
+            from_user_id: eventItem.message.from.id,
+            from_user_mention_name: eventItem.message.from.mention_name,
+            from_user_name: eventItem.message.from.name
           }
         : {};
 
     const supportMessage = Object.assign(
       {},
       {
-        date: message.date,
-        id: message.id,
-        message: message.message,
-        raw_json: JSON.stringify(message),
-        support_room_api_id: roomMessageEvent.room.id,
-        type: message.type
+        date: eventItem.message.date,
+        id: eventItem.message.id,
+        message: eventItem.message.message,
+        raw_json: JSON.stringify(eventItem),
+        support_room_api_id: eventItem.room.id,
+        type: eventItem.message.type
       },
       messageFrom
     );
