@@ -5,29 +5,63 @@ import { DynamoDB } from "aws-sdk";
 import { InstallableResource } from "../../resources/installable";
 
 export class Installable {
-  private url: string;
+  private dynamoDB: DynamoDB;
+  private urlInternal: string;
 
-  constructor(url: string) {
-    this.url = url;
+  public set url(val: string) {
+    this.urlInternal = val;
   }
 
-  public async fetch() {
-    return await Axios.get<InstallableResource>(this.url);
+  constructor(url?: string) {
+    if (url) {
+      this.urlInternal = url;
+    }
   }
 
   public async delete() {
-    const fetchResponse = await this.fetch();
-    const installable: InstallableResource = await fetchResponse.data;
+    if (this.urlInternal) {
+      this.createDynamoDb();
 
-    const dyanmoDB = new DynamoDB();
+      const fetchResponse = await this.fetch();
+      const installable: InstallableResource = await fetchResponse.data;
 
-    const deleteParams: DynamoDB.Types.DeleteItemInput = {
+      const deleteParams: DynamoDB.Types.DeleteItemInput = {
+        Key: {
+          oauthId: { S: installable.oauthId }
+        },
+        TableName: process.env.DYNAMODB_TABLE
+      };
+
+      return await this.dynamoDB.deleteItem(deleteParams).promise();
+    }
+
+    return;
+  }
+
+  public async fetch() {
+    if (this.urlInternal) {
+      return await Axios.get<InstallableResource>(this.urlInternal);
+    }
+
+    return;
+  }
+
+  public async get(oauthId: InstallableResource["oauthId"]) {
+    this.createDynamoDb();
+
+    const getParams: DynamoDB.Types.GetItemInput = {
       Key: {
-        oauthId: { S: installable.oauthId }
+        oauthId: { S: oauthId }
       },
       TableName: process.env.DYNAMODB_TABLE
     };
 
-    return await dyanmoDB.deleteItem(deleteParams).promise();
+    return await this.dynamoDB.getItem(getParams).promise();
+  }
+
+  private createDynamoDb() {
+    if (!this.dynamoDB) {
+      this.dynamoDB = new DynamoDB();
+    }
   }
 }
