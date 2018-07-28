@@ -88,22 +88,27 @@ interface SupportRoomConfig {
 */
 const supportRooms = [
   {
+    admin: "Rob Sheehy",
     apiId: 2751222,
     name: "Support: App Intelligence"
   },
   {
+    admin: "Trent Grover",
     apiId: 2752715,
     name: "Support: H5 / Dart"
   },
   {
+    admin: "Behdad Shayegan",
     apiId: 823785,
     name: "Support: UI Platform (UIP)"
   },
   {
+    admin: "Max Peterson",
     apiId: 4240765,
     name: "Support: Unified Wdesk"
   },
   {
+    admin: "Trent Grover",
     apiId: 2750828,
     name: "Support: Wdesk SDK"
   }
