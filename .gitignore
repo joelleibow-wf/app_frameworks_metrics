@@ -10,3 +10,4 @@ output
 # Files
 .env
 config/credentials.csv
+config/workiva-analytics.app-frameworks-metrics.json
