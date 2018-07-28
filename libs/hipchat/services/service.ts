@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 
 import { URL, URLSearchParams } from "url";
 
-import { resourceServices } from "../../../config/resource_services";
+import { resourceProviders } from "../../../config/resource_providers";
 
 export interface SearchParams {
   [key: string]: string | string[] | undefined;
@@ -14,7 +14,7 @@ export abstract class HipchatService<R> {
   private origin: string;
 
   constructor(public resourceId: string | number) {
-    this.origin = resourceServices.hipchat.origin;
+    this.origin = resourceProviders.hipchat.origin;
   }
 
   public async fetch?(
