@@ -1,40 +1,18 @@
-import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
-import { AWSError, DynamoDB } from "aws-sdk";
+import { APIGatewayEvent, Handler } from "aws-lambda";
 
-export const addonInstalled: Handler = (
-  event: APIGatewayEvent,
-  context: Context,
-  done: Callback
-) => {
-  const data = JSON.parse(event.body);
+import { InstallableResource } from "../../libs/hipchat/resources/installable";
+import { InstallableService } from "../../libs/hipchat/services/installable";
 
-  const installItem: DynamoDB.Types.PutItemInput = {
-    Item: {
-      capabilitiesUrl: { S: data.capabilitiesUrl },
-      groupId: { N: data.groupId.toString() },
-      installedOn: { S: new Date(Date.now()).toISOString() },
-      oauthId: { S: data.oauthId },
-      oauthSecret: { S: data.oauthSecret },
-      roomId: { N: data.roomId.toString() }
+export const addonInstalled: Handler = async (event: APIGatewayEvent) => {
+  const installableService = new InstallableService();
+  const installItem: InstallableResource = JSON.parse(event.body);
+  await installableService.save(installItem);
+
+  return {
+    body: JSON.stringify(installItem),
+    headers: {
+      "content-type": "application/json"
     },
-    TableName: process.env.DYNAMODB_TABLE
+    statusCode: 200
   };
-
-  const dyanmoDB = new DynamoDB();
-
-  dyanmoDB.putItem(installItem, (error: AWSError) => {
-    if (error) {
-      done(new Error(`Unable to save install w/ error: ${error}`));
-
-      return;
-    }
-
-    done(null, {
-      body: JSON.stringify(installItem.Item),
-      headers: {
-        "content-type": "application/json"
-      },
-      statusCode: 200
-    });
-  });
 };
