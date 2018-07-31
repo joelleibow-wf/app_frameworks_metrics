@@ -45,7 +45,7 @@ functions:
     handler: functions/hipchat.supportMessageReceived
     events:
       - http:
-          method: get
+          method: post
           path: support-messages
 
 resources:
