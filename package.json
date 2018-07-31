@@ -7,6 +7,7 @@
     "create_support_room_archive": "ts-node -P ./tsconfig.json ./scripts/hipchat/create_support_room_archive.ts"
   },
   "dependencies": {
+    "@google-cloud/bigquery": "^1.3.0",
     "aws-sdk": "^2.279.1",
     "axios": "^0.18.0",
     "dotenv": "^6.0.0",
