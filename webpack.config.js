@@ -1,3 +1,4 @@
+const copy = require("copy-webpack-plugin");
 const path = require("path");
 const slsw = require("serverless-webpack");
 
@@ -8,22 +9,30 @@ Object.keys(slsw.lib.entries).forEach(
 );
 
 module.exports = {
-  mode: slsw.lib.webpack.isLocal ? "development" : "production",
-  entry: entries,
   devtool: "source-map",
-  resolve: {
-    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+  entry: entries,
+  mode: slsw.lib.webpack.isLocal ? "development" : "production",
+  module: {
+    rules: [
+      // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader"
+      }
+    ]
   },
   output: {
     libraryTarget: "commonjs",
     path: path.join(__dirname, ".webpack"),
     filename: "[name].js"
   },
+  plugins: [
+    new copy([
+      "./config/workiva-analytics.app-frameworks-metrics.json"
+    ])
+  ],
+  resolve: {
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"]
+  },
   target: "node",
-  module: {
-    rules: [
-      // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-      { test: /\.tsx?$/, loader: "ts-loader" }
-    ]
-  }
 };
