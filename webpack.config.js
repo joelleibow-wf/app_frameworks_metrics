@@ -29,7 +29,10 @@ module.exports = {
   plugins: [
     new copy([
       "./.env",
-      "./config/workiva-analytics.app-frameworks-metrics.json"
+      {
+        from: "./config/workiva-analytics.app-frameworks-metrics.json",
+        to: "config/workiva-analytics.app-frameworks-metrics.json"
+      }
     ])
   ],
   resolve: {
