@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "lib": ["es2017"],
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "paths": {
-      "*": ["node_modules/*", "@types"]
-    },
     "sourceMap": true,
     "target": "es2017"
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
