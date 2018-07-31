@@ -1,14 +1,18 @@
+import * as BigQuery from "@google-cloud/bigquery";
+
 import { APIGatewayEvent, Handler } from "aws-lambda";
 import { DynamoDB } from "aws-sdk";
+import { config } from "dotenv";
 import { verify } from "jsonwebtoken";
 
-import { MessageResource } from "../../libs/hipchat/resources/message";
 import { RoomMessageEventResource } from "../../libs/hipchat/resources/room";
 import { InstallableService } from "../../libs/hipchat/services/installable";
 
 export const supportMessageReceived: Handler = async (
   event: APIGatewayEvent
 ) => {
+  config();
+
   const roomMessageEvent: RoomMessageEventResource = JSON.parse(event.body);
   const installableService = new InstallableService();
   const installItem: DynamoDB.Types.GetItemOutput = await installableService.get(
@@ -44,17 +48,26 @@ export const supportMessageReceived: Handler = async (
       messageFrom
     );
 
+    const bigquery = new BigQuery();
+    const dataset = bigquery.dataset("app_frameworks_metrics");
+    const table = dataset.table("hipchat_support_messages");
+
+    await table.insert(supportMessage);
+
     // tslint:disable-next-line:no-console
     console.log(
-      `The following message will be saved to BigQuery: ${JSON.stringify(
-        supportMessage
-      )}\n\n... eventually 😔`
+      `Message ${eventItem.message.id} successfully written to BigQuery.`
     );
-  } catch (err) {
-    throw err;
-  }
 
-  return {
-    statusCode: 200
-  };
+    return {
+      statusCode: 201
+    };
+  } catch (err) {
+    // tslint:disable-next-line:no-console
+    console.log(`There was an error writing to BigQuery: ${err}`);
+
+    return {
+      statusCode: 400
+    };
+  }
 };
