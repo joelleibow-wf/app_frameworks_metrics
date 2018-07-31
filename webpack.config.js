@@ -28,6 +28,7 @@ module.exports = {
   },
   plugins: [
     new copy([
+      "./.env",
       "./config/workiva-analytics.app-frameworks-metrics.json"
     ])
   ],

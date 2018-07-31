@@ -1,10 +1,10 @@
 service:
   name: app-frameworks-metrics
 
-# Add the serverless-webpack plugin
 plugins:
-  - serverless-webpack
+  - serverless-dotenv-plugin
   - serverless-offline
+  - serverless-webpack
 
 provider:
   name: aws
@@ -21,6 +21,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
 functions:
   addonCapabilities:
     handler: functions/hipchat.addonCapabilities
@@ -44,8 +45,9 @@ functions:
     handler: functions/hipchat.supportMessageReceived
     events:
       - http:
-          method: post
+          method: get
           path: support-messages
+
 resources:
   Resources:
     InstallsDynamoDbTable:
