@@ -6,7 +6,19 @@ export const addonUninstalled: Handler = async (event: APIGatewayEvent) => {
   const installableService = new InstallableService(
     event.queryStringParameters.installable_url
   );
-  await installableService.delete();
+  let logMessage = `App Frameworks Support Monitor was removed from Hipchat room `;
+
+  try {
+    const deleteResponse = await installableService.delete();
+    logMessage += deleteResponse.Attributes.roomId.N;
+  } catch (error) {
+    logMessage += ` ${
+      event.queryStringParameters.installable_url
+    } but unsuccessfully deleted from record: ${error}`;
+  }
+
+  // tslint:disable-next-line:no-console
+  console.log(logMessage);
 
   return {
     headers: {
