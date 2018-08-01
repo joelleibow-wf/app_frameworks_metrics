@@ -32,7 +32,12 @@ export class Installable {
         TableName: process.env.DYNAMODB_TABLE
       };
 
-      return await this.dynamoDB.deleteItem(deleteParams).promise();
+      try {
+        await this.dynamoDB.deleteItem(deleteParams).promise();
+        return installable;
+      } catch (error) {
+        throw error;
+      }
     }
 
     return;

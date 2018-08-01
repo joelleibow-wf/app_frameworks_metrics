@@ -10,9 +10,10 @@ export const addonUninstalled: Handler = async (event: APIGatewayEvent) => {
 
   try {
     const deleteResponse = await installableService.delete();
-    logMessage += deleteResponse.Attributes.roomId.N;
+
+    logMessage += deleteResponse.roomId;
   } catch (error) {
-    logMessage += ` ${
+    logMessage += `with URL ${
       event.queryStringParameters.installable_url
     } but unsuccessfully deleted from record: ${error}`;
   }
