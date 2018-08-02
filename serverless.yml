@@ -24,6 +24,13 @@ provider:
 
 functions:
   addonCapabilities:
+    environment:
+      DEPLOY_URL:
+        Fn::Join:
+        - ""
+        - - "https://"
+          - Ref: "ApiGatewayRestApi"
+          - ".execute-api.${opt:region, self:provider.region}.amazonaws.com/${opt:stage, self:provider.stage}"
     handler: functions/hipchat.addonCapabilities
     events:
       - http:

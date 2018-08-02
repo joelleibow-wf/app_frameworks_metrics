@@ -19,18 +19,15 @@ export const addonCapabilities: Handler = (
       installable: {
         allowGlobal: false,
         allowRoom: true,
-        callbackUrl:
-          "https://umoqgqh6k4.execute-api.us-east-1.amazonaws.com/dev/addon/installed",
-        uninstalledUrl:
-          "https://umoqgqh6k4.execute-api.us-east-1.amazonaws.com/dev/addon/uninstalled"
+        callbackUrl: `${process.env.DEPLOY_URL}/addon/installed`,
+        uninstalledUrl: `${process.env.DEPLOY_URL}/addon/uninstalled`
       },
       webhook: [
         {
           authentication: "jwt",
           event: "room_message",
           name: "Support room message handler",
-          url:
-            "https://umoqgqh6k4.execute-api.us-east-1.amazonaws.com/dev/support-messages"
+          url: `${process.env.DEPLOY_URL}/support-messages`
         }
       ]
     },
@@ -39,8 +36,7 @@ export const addonCapabilities: Handler = (
     links: {
       homepage:
         "https://github.com/joelleibow-wf/app_frameworks_metrics/tree/master/functions/hipchat",
-      self:
-        "https://umoqgqh6k4.execute-api.us-east-1.amazonaws.com/dev/addon/capabilities"
+      self: `${process.env.DEPLOY_URL}/addon/capabilities`
     },
     name: "App Frameworks Support Monitor",
     vendor: {
