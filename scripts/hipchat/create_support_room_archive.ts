@@ -93,7 +93,7 @@ const supportRooms = [
     name: "Support: App Intelligence"
   },
   {
-    admin: "Trent Grover",
+    admin: "Joel Leibow",
     apiId: 2752715,
     name: "Support: H5 / Dart"
   },
@@ -108,7 +108,7 @@ const supportRooms = [
     name: "Support: Unified Wdesk"
   },
   {
-    admin: "Trent Grover",
+    admin: "Joel Leibow",
     apiId: 2750828,
     name: "Support: Wdesk SDK"
   }
@@ -124,6 +124,7 @@ const now = Date.now();
 const nowDate = new Date(now);
 
 const date = nowDate.toISOString();
+// const date = "2018-08-02T19:12:44.396";
 const endDate = "2018-07-17T00:00:00.000";
 
 asyncForEach<SupportRoomConfig, Promise<void>>(supportRooms, async room => {
