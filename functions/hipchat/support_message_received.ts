@@ -1,4 +1,4 @@
-import * as BigQuery from "@google-cloud/bigquery";
+import BigQuery from "@google-cloud/bigquery";
 
 import { APIGatewayEvent, Handler } from "aws-lambda";
 import { DynamoDB } from "aws-sdk";
