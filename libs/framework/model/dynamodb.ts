@@ -1,9 +1,9 @@
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB as DynamoDBClient } from "aws-sdk";
 
-export abstract class Dynamo<I extends { [key: string]: any }> {
+export abstract class DynamoDB<I extends { [key: string]: any }> {
   protected abstract tableName: string;
 
-  private dataStore: DynamoDB;
+  private dataStore: DynamoDBClient;
 
   constructor(private item: I) {}
 
@@ -26,12 +26,14 @@ export abstract class Dynamo<I extends { [key: string]: any }> {
 
   private createDataStore() {
     if (!this.dataStore) {
-      this.dataStore = new DynamoDB();
+      this.dataStore = new DynamoDBClient();
     }
   }
 
   private itemToDynamoItem() {
-    const dynamoItem: { [itemField: string]: DynamoDB.AttributeValue } = {};
+    const dynamoItem: {
+      [itemField: string]: DynamoDBClient.AttributeValue;
+    } = {};
 
     Object.keys(this.item).forEach(
       itemField =>
@@ -46,13 +48,13 @@ export abstract class Dynamo<I extends { [key: string]: any }> {
   // TODO: This needs to support types besides number and string.
   private getDynamoAttributeValue(
     itemFieldValue: any
-  ): DynamoDB.AttributeValue {
+  ): DynamoDBClient.AttributeValue {
     const typeToAttributeValueKey: { [type: string]: string } = {
       number: "N",
       string: "S"
     };
 
-    const attributeValue: DynamoDB.AttributeValue = {
+    const attributeValue: DynamoDBClient.AttributeValue = {
       [typeToAttributeValueKey[
         typeof itemFieldValue
       ]]: itemFieldValue.toString()

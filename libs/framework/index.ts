@@ -1,1 +1,1 @@
-export { Dynamo as DynamoModel } from "./model/dynamo";
+export { DynamoDB as DynamoDBModel } from "./model/dynamodb";
