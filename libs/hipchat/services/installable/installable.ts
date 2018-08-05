@@ -1,7 +1,8 @@
 import Axios from "axios";
 
-import { AWSError, DynamoDB } from "aws-sdk";
+import { DynamoDB } from "aws-sdk";
 
+import { InstallableModel } from "../../models";
 import { InstallableResource } from "../../resources/installable";
 
 export class Installable {
@@ -29,7 +30,7 @@ export class Installable {
         Key: {
           oauthId: { S: installable.oauthId }
         },
-        TableName: process.env.DYNAMODB_TABLE
+        TableName: process.env.DYNAMODB_INSTALLS_TABLE
       };
 
       try {
@@ -58,28 +59,15 @@ export class Installable {
       Key: {
         oauthId: { S: oauthId }
       },
-      TableName: process.env.DYNAMODB_TABLE
+      TableName: process.env.DYNAMODB_INSTALLS_TABLE
     };
 
     return await this.dynamoDB.getItem(getParams).promise();
   }
 
-  public async save(installable: InstallableResource) {
-    this.createDynamoDb();
-
-    const installItem: DynamoDB.Types.PutItemInput = {
-      Item: {
-        capabilitiesUrl: { S: installable.capabilitiesUrl },
-        groupId: { N: installable.groupId.toString() },
-        installedOn: { S: new Date(Date.now()).toISOString() },
-        oauthId: { S: installable.oauthId },
-        oauthSecret: { S: installable.oauthSecret },
-        roomId: { N: installable.roomId.toString() }
-      },
-      TableName: process.env.DYNAMODB_TABLE
-    };
-
-    return await this.dynamoDB.putItem(installItem).promise();
+  public async createFromResource(installableResource: InstallableResource) {
+    const newInstallableModel = new InstallableModel(installableResource);
+    return await newInstallableModel.save();
   }
 
   private createDynamoDb() {
