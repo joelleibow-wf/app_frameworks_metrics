@@ -5,7 +5,9 @@ import { InstallableService } from "../../libs/hipchat/services/installable";
 
 export const addonInstalled: Handler = async (event: APIGatewayEvent) => {
   const installableService = new InstallableService();
+
   const installItem: InstallableResource = JSON.parse(event.body);
+
   const responseMap = {
     body: "",
     headers: {
@@ -13,10 +15,11 @@ export const addonInstalled: Handler = async (event: APIGatewayEvent) => {
     },
     statusCode: 201
   };
+
   let logMessage = "App Frameworks Support Monitor was ";
 
   try {
-    await installableService.save(installItem);
+    await installableService.createFromResource(installItem);
 
     logMessage += `added to Hipchat room ${installItem.roomId}`;
 
@@ -25,9 +28,11 @@ export const addonInstalled: Handler = async (event: APIGatewayEvent) => {
     logMessage += `unsuccessful installing to Hipchat room ${
       installItem.roomId
     }: ${error}`;
+
     responseMap.body = JSON.stringify({
       message: error
     });
+
     responseMap.statusCode = 400;
   }
 
