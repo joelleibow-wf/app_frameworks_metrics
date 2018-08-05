@@ -10,7 +10,7 @@ provider:
   name: aws
   runtime: nodejs8.10
   environment:
-    DYNAMODB_TABLE: "app-frameworks-support-monitor-installs-${opt:stage, self:provider.stage}"
+    DYNAMODB_INSTALLS_TABLE: "app-frameworks-support-monitor-installs-${opt:stage, self:provider.stage}"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -20,7 +20,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_INSTALLS_TABLE}"
 
 functions:
   addonCapabilities:
@@ -61,7 +61,7 @@ resources:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        TableName: ${self:provider.environment.DYNAMODB_INSTALLS_TABLE}
         AttributeDefinitions:
           -
             AttributeName: oauthId
